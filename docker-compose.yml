@@ -1,0 +1,28 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8081:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: my_future_book
+      DB_USER: book_user
+      DB_PASSWORD: book_password
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.4
+    command: --event-scheduler=ON
+    environment:
+      MYSQL_DATABASE: my_future_book
+      MYSQL_USER: book_user
+      MYSQL_PASSWORD: book_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - book_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+volumes:
+  book_data:
+
